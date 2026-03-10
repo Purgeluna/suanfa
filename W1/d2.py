@@ -201,4 +201,4 @@ r2 = r2_score(y_test,y_pred)
 print("\n模型评估：")
 print(f"均方误差 (MSE): {mse:.2f}")
 print(f"决定系数 (R²): {r2:.2f}")
-# h
+from sklearn.linear_model import LinearRegression

@@ -79,6 +79,7 @@ print(df6)
 
 '''
 
+'''
 # pandas实例  解析数据清洗
 # 实例1   电商订单数据清洗与分析
 
@@ -127,3 +128,76 @@ result2=df_cleaned.groupby(df_cleaned['商品类别'])['金额'].sum().round(2)
 print("商品类别：\n", result2)
 
 df_cleaned.to_excel("cleaned_orders.xlsx", index=False)  #保存清洗后的数据到Excel文件，index=False表示不保存行索引
+
+print("清洗后的数据已保存到 cleaned_orders.xlsx")
+
+'''
+# Sklearn 机器学习库
+
+# IEEE SIGNAL PROCESSING LETTERS
+#
+# IEEE COMMUNICATIONS LETTERS
+
+# scikit-learn   特征矩阵 和 目标向量
+# 案例
+import numpy as np
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler,OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+data = {
+    'area': [70, 85, 100, 120, 60, 150, 200, 80, 95, 110],
+    'rooms': [2, 3, 3, 4, 2, 5, 6, 3, 3, 4],
+    'floor': [5, 2, 8, 10, 3, 15, 18, 7, 9, 11],
+    'year_built': [2005, 2010, 2012, 2015, 2000, 2018, 2020, 2008, 2011, 2016],
+    'location': ['Chaoyang', 'Haidian', 'Chaoyang', 'Dongcheng', 'Fengtai', 'Haidian', 'Chaoyang', 'Fengtai', 'Dongcheng', 'Haidian'],
+    'price': [5000000, 6000000, 6500000, 7000000, 4500000, 10000000, 12000000, 5500000, 6200000, 7500000]  # 房价（目标变量）
+}
+data=pd.DataFrame(data)
+# 特征选择
+X=data[['area', 'rooms', 'floor', 'year_built', 'location']]  # 特征矩阵
+y=data['price']  # 目标向量
+
+x_train,x_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
+
+# 预处理
+numeric_features=['area', 'rooms', 'floor', 'year_built']
+categorical_features=['location']
+
+numeric_transformer=StandardScaler()  # 数值特征标准化
+categorical_transformer=OneHotEncoder()  # 类别特征独热编码
+
+preprocessor =ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ]
+)
+
+X_train_transformed = preprocessor.fit_transform(x_train)
+print("预处理后的训练数据：")
+print(X_train_transformed)
+
+from sklearn.linear_model import LinearRegression
+# 建立线性回归模型预测房价  # 构建一个包含预处理和回归模型的 Pipeline
+model_pipeline=Pipeline(steps=[
+    ('preprocessor', preprocessor),           #数据预处理步骤
+    ('regressor', LinearRegression())         # 回归模型
+])
+
+model_pipeline.fit(x_train,y_train)  # 训练模型
+y_pred=model_pipeline.predict(x_test)  # 预测测试集的房价
+print("预测的房价：",y_pred)
+
+# 模型评估
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+mse=mean_squared_error(y_test,y_pred)
+r2 = r2_score(y_test,y_pred)
+
+print("\n模型评估：")
+print(f"均方误差 (MSE): {mse:.2f}")
+print(f"决定系数 (R²): {r2:.2f}")

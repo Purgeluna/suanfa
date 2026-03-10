@@ -54,4 +54,7 @@ if [条件]; then
 else
     # 条件为假时执行的代码
 fi
-# d3 结束le
+# 循环
+for i in {1..5}; do
+    echo "Iteration $i"
+done

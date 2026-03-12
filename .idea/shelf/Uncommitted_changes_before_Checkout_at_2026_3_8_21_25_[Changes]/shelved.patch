@@ -1,0 +1,11 @@
+Index: LD.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/LD.py b/LD.py
+--- a/LD.py	(revision 2a8fd029e2e9534cda80a7a3979120810b18004f)
++++ b/LD.py	(date 1772976294436)
+@@ -1,0 +1,1 @@
++1235
+\ No newline at end of file
